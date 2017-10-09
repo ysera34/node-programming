@@ -65,18 +65,34 @@ console.log('decipheredOutput : ', decipheredOutput);
 
 var fs = require('fs');
 
-var text = fs.readFileSync('textfile.txt', 'utf8');
-console.log('read file sync output : ', text);
+try {
+    var text = fs.readFileSync('textfile.txt', 'utf8');
+    console.log('read file sync output : ', text);
+} catch (e) {
+    console.log('readFileSync error : ', e);
+}
 
 fs.readFile('textfile.txt', 'utf8', function (error, data) {
-    console.log('read file async output : ', data);
+    if (error) {
+        console.log('readFile error : ', e);
+    } else {
+        console.log('read file async output : ', data);    
+    }
 });
 
 var data = 'Hello world write file';
 
 fs.writeFile('textfile2.txt', data, 'utf8', function (error) {
-    console.log('write file async completed');
+    if (error) {
+        console.log('writeFile error : ', e);
+    } else {
+        console.log('write file async completed');    
+    }
 });
 
-fs.writeFileSync('textfile3.txt', data, 'utf8');
-console.log('write file sync completed');
+try {
+    fs.writeFileSync('textfile3.txt', data, 'utf8');
+    console.log('write file sync completed');
+} catch (e) {
+    console.log('writeFileSync error : ', e);
+}
