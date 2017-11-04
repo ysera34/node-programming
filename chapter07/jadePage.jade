@@ -1,0 +1,25 @@
+doctype html
+html
+    head
+        title Index Page
+        style
+            * { margin:0px; padding:0px; }
+        script(src="http://code.jquery.com/jquery-1.10.2.js")
+        script
+            $(document).ready(function() {
+            var alpha = 10;
+            });
+    body
+        // JADE String
+        #header
+            h1 Hello Jade .. !
+            h2 Lorem ipsum
+        h1 #{name} .. !
+        h2= description
+        hr
+        - for(var i = 0; i < 10; i++) {
+            p
+                a(href="http://hanb.co.kr") Go To Hanbit Media #{i}
+        - }
+        .articla
+            a(href="http://hanb.co.kr", data-test="multiple Attribute") Go To Hanbit Media
