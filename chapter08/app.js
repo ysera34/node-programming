@@ -12,10 +12,22 @@ app.use(function(req, res) {
             name: 'name - ' + i
         })
     }
-    res.send(output);
+//    res.send(output);
     
-//    res.writeHead(200, { 'Content-Type': 'text/html'});
-//    res.end('<h1>Hello Express</h1>');
+    var agent = req.header('User-Agent');
+    console.log(req.headers);
+    console.log(agent);
+
+//    if (agent.toLowerCase().match(/chrome/)) {
+//        res.send('<h1>Hello Chrome ...!</h1>');
+//    } else {
+//        res.send('<h1>Hello Express ...!</h1>');
+//    }
+    
+    var name = req.param('name');
+    var region = req.param('region')
+    
+    res.send('<h1>' + name + '-' + region + '</h1>');
 });
 
 http.createServer(app).listen(52273, function() {
