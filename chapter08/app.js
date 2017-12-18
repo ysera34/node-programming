@@ -4,6 +4,7 @@ var morgan = require('morgan');
 // var uuid = require('node-uuid');
 
 var app = express();
+app.use(express.static(__dirname + '/public'));
 
 // app.use(express.logger());
 // app.use(morgan('combined'));
@@ -69,7 +70,8 @@ app.use(function (req,res, next) {
 
   res.writeHead(200, { 'Content-Type': 'text/html' });
   // res.end('<h1>express middleware</h1>');
-  res.end('<h1>' + req.number + ' : ' + res.number + '</h1>');
+  // res.end('<h1>' + req.number + ' : ' + res.number + '</h1>');
+  res.end('<img src="/{filepath}"/>');
 });
 
 http.createServer(app).listen(52273, function() {
