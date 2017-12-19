@@ -2,9 +2,12 @@ var http = require('http');
 var express = require('express');
 var morgan = require('morgan');
 // var uuid = require('node-uuid');
+var cookieParser = require('cookie-parser');
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
+// app.use(express.cookieParser());
+app.use(cookieParser());
 
 // app.use(express.logger());
 // app.use(morgan('combined'));
@@ -87,6 +90,19 @@ app.get('/b', function(req, res) {
 app.get('/page/:id', function(req, res) {
   var name = req.param('id');
   res.send('<h1>' + name + ' Page</h1>');
+});
+
+app.get('/getCookie', function(req, res) {
+  res.send(req.cookies);
+});
+
+app.get('/setCookie', function(req, res) {
+  res.cookie('string', 'cookie');
+  res.cookie('json', {
+    name: 'cookie',
+    property: 'delicious',
+  });
+  res.redirect('/getCookie');
 });
 
 app.all('*', function(req, res) {
