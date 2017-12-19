@@ -68,10 +68,29 @@ app.use(function (req,res, next) {
 app.use(function (req,res, next) {
   console.log('third middleware');
 
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  // res.writeHead(200, { 'Content-Type': 'text/html' });
   // res.end('<h1>express middleware</h1>');
   // res.end('<h1>' + req.number + ' : ' + res.number + '</h1>');
-  res.end('<img src="/{filepath}"/>');
+  // res.end('<img src="/{filepath}"/>');
+  next();
+});
+
+// app.use(app.router);
+app.get('/a', function(req, res) {
+  res.send('<a href="/b">Go to B</a>');
+});
+
+app.get('/b', function(req, res) {
+  res.send('<a href="/a">Go to A</a>');
+});
+
+app.get('/page/:id', function(req, res) {
+  var name = req.param('id');
+  res.send('<h1>' + name + ' Page</h1>');
+});
+
+app.all('*', function(req, res) {
+  res.send(404, '<h1>Error - Page Not Found</h1>');
 });
 
 http.createServer(app).listen(52273, function() {
