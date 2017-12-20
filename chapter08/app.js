@@ -1,13 +1,17 @@
+var fs = require('fs');
 var http = require('http');
 var express = require('express');
 var morgan = require('morgan');
 // var uuid = require('node-uuid');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
 // app.use(express.cookieParser());
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extende: false }));
+app.use(bodyParser.json());
 
 // app.use(express.logger());
 // app.use(morgan('combined'));
@@ -104,6 +108,37 @@ app.get('/setCookie', function(req, res) {
   });
   res.redirect('/getCookie');
 });
+
+app.get('/', function(req, res) {
+  if (req.cookies.auth) {
+    res.send('<h1>Login Success</h1>');
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.get('/login', function(req, res) {
+  fs.readFile('./public/login.html', function(error, data) {
+    // res.send(data); // download file
+    res.send(data.toString());
+  });
+});
+
+app.post('/login', function(req, res) {
+  var login = req.param('login');
+  var password = req.param('password');
+
+  console.log(login, password);
+  console.log(req.body);
+
+  if (login == 'rint' && password == '1234') {
+    res.cookie('auth', true);
+    res.redirect('/');
+  } else {
+    res.redirect('/login');
+  }
+});
+
 
 app.all('*', function(req, res) {
   res.send(404, '<h1>Error - Page Not Found</h1>');
