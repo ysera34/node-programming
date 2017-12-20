@@ -5,15 +5,35 @@ var morgan = require('morgan');
 // var uuid = require('node-uuid');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var cookieSession = require('cookie-session');
 
 var app = express();
 app.use(express.static(__dirname + '/public'));
 // app.use(express.cookieParser());
 app.use(cookieParser());
+app.use(session({ secret: 'secret key' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // app.use(express.limit('10mb'));
 app.use(bodyParser({ uploadDir: __dirname + '/multipart' }));
+
+/*
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
+app.use(cookieSession({
+  name: 'session',
+  keys: [], // secret keys
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
+*/
 
 // app.use(express.logger());
 // app.use(morgan('combined'));
@@ -40,8 +60,8 @@ app.use(function(req, res, next) {
 //    res.send(output);
 
     var agent = req.header('User-Agent');
-    console.log(req.headers);
-    console.log(agent);
+    // console.log(req.headers);
+    // console.log(agent);
 
    // if (agent.toLowerCase().match(/chrome/)) {
    //     res.send('<h1>Hello Chrome ...!</h1>');
@@ -171,6 +191,15 @@ app.post('/upload', function(req, res) {
     res.send(400);
   }
   res.redirect('/upload');
+});
+
+app.get('/session', function(req, res) {
+  var output = [];
+  output.cookies = req.cookies;
+  output.session = req.session;
+
+  req.session.now = (new Date()).toUTCString();
+  res.send(output);
 });
 
 app.all('*', function(req, res) {
