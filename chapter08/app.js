@@ -10,8 +10,10 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 // app.use(express.cookieParser());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extende: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// app.use(express.limit('10mb'));
+app.use(bodyParser({ uploadDir: __dirname + '/multipart' }));
 
 // app.use(express.logger());
 // app.use(morgan('combined'));
@@ -139,6 +141,37 @@ app.post('/login', function(req, res) {
   }
 });
 
+app.get('/upload', function(req, res) {
+  fs.readFile('./public/upload.html', function(error, data) {
+    res.send(data.toString());
+  });
+});
+
+app.post('/upload', function(req, res) {
+  // console.log(req.body);
+  // console.log(req.files);
+  var comment = req.param('comment');
+  var imageFile = req.files.image;
+  if (imageFile) {
+    var name = imageFile.name;
+    var path = imageFile.path;
+    var type = imageFile.type;
+
+    if (type.indexOf('image') != -1) {
+      var outputPath = __dirname + '/multipart/' + Date.now() + '_' + name;
+      fs.rename(path, outputPath, function(error) {
+        res.redirect('/upload');
+      });
+    } else {
+      fs.unlike(path, function(error) {
+        res.send(400);
+      });
+    }
+  } else {
+    res.send(400);
+  }
+  res.redirect('/upload');
+});
 
 app.all('*', function(req, res) {
   res.send(404, '<h1>Error - Page Not Found</h1>');
