@@ -27,8 +27,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/', index);
 app.use('/users', users);
-app.use('/product', function(req, res) {
-  res.render('product', { title: 'Product Page' });
+app.get('/product', function(req, res) {
+  res.render('product', { title: 'Product Index Page' });
+});
+
+app.get('/product/insert', function(req, res) {
+  console.log('insert');
+  res.render('product/insert', { title: 'Product Insert Page' });
+});
+
+app.get('/product/edit', function(req, res) {
+  console.log('edit');
+  res.render('product/edit', { title: 'Product Edit Page' });
 });
 
 // catch 404 and forward to error handler
